@@ -3446,7 +3446,7 @@ impl App {
     }
 
     pub fn select_column_right(&mut self) {
-        if self.select_column < 14 {
+        if self.select_column < 15 {
             self.select_column += 1;
         }
     }
@@ -3464,20 +3464,21 @@ impl App {
             4 => {
                 self.input_mode = InputMode::ParamsBucketPopup;
             } // Params
-            5 => self.set_or_toggle_sort(SortColumn::Score), // Score
-            6 => self.set_or_toggle_sort(SortColumn::Tps), // tok/s
-            7 => {
+            5 => {} // Required memory (no filter/sort)
+            6 => self.set_or_toggle_sort(SortColumn::Score), // Score
+            7 => self.set_or_toggle_sort(SortColumn::Tps), // tok/s
+            8 => {
                 self.input_mode = InputMode::QuantPopup;
             } // Quant
-            8 => {}                                // Disk (no filter/sort)
-            9 => {
+            9 => {}                                // Disk (no filter/sort)
+            10 => {
                 self.input_mode = InputMode::RunModePopup;
             } // Mode
-            10 => self.set_or_toggle_sort(SortColumn::MemPct), // Mem%
-            11 => self.set_or_toggle_sort(SortColumn::Ctx), // Ctx
-            12 => self.set_or_toggle_sort(SortColumn::ReleaseDate), // Date
-            13 => self.cycle_fit_filter(),         // Fit
-            14 => {
+            11 => self.set_or_toggle_sort(SortColumn::MemPct), // Mem%
+            12 => self.set_or_toggle_sort(SortColumn::Ctx), // Ctx
+            13 => self.set_or_toggle_sort(SortColumn::ReleaseDate), // Date
+            14 => self.cycle_fit_filter(),         // Fit
+            15 => {
                 self.input_mode = InputMode::UseCasePopup;
             } // Use Case
             _ => {}

@@ -154,6 +154,7 @@ const zhCN = {
       model: '模型',
       provider: '提供方',
       params: '参数量',
+      requiredMemory: '所需内存',
       fit: '适配度',
       mode: '模式',
       runtime: '运行时',

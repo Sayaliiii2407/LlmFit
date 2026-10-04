@@ -154,6 +154,7 @@ const en = {
       model: 'Model',
       provider: 'Provider',
       params: 'Params',
+      requiredMemory: 'Req. memory',
       fit: 'Fit',
       mode: 'Mode',
       runtime: 'Runtime',

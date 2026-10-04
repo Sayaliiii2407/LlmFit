@@ -803,7 +803,7 @@ fn marquee_text(text: &str, window_chars: usize, tick: u64) -> String {
     ring[start..start + window_chars].iter().collect()
 }
 
-fn model_col_text_width(area: Rect, widths: [Constraint; 14]) -> usize {
+fn model_col_text_width(area: Rect, widths: [Constraint; 15]) -> usize {
     let inner = Rect {
         x: 0,
         y: 0,
@@ -845,17 +845,17 @@ pub(crate) fn model_table_viewport(
 fn draw_table(frame: &mut Frame, app: &App, area: Rect, tc: &ThemeColors) {
     let sort_col = app.sort_column;
     let header_names = [
-        "", "Inst", "Model", "Provider", "Params", "Score", "tok/s*", "Quant", "Disk", "Mode",
-        "Mem %", "Ctx", "Date", "Fit", "Use Case",
+        "", "Inst", "Model", "Provider", "Params", "Req. memory", "Score", "tok/s*", "Quant",
+        "Disk", "Mode", "Mem %", "Ctx", "Date", "Fit", "Use Case",
     ];
     let sort_col_idx: Option<usize> = match sort_col {
-        SortColumn::Score => Some(5),
-        SortColumn::Tps => Some(6),
+        SortColumn::Score => Some(6),
+        SortColumn::Tps => Some(7),
         SortColumn::Params => Some(4),
-        SortColumn::MemPct => Some(10),
-        SortColumn::Ctx => Some(11),
-        SortColumn::ReleaseDate => Some(12),
-        SortColumn::UseCase => Some(14),
+        SortColumn::MemPct => Some(11),
+        SortColumn::Ctx => Some(12),
+        SortColumn::ReleaseDate => Some(13),
+        SortColumn::UseCase => Some(15),
         SortColumn::Provider => Some(3),
     };
     let in_select_mode = app.input_mode == InputMode::Select;
@@ -887,6 +887,7 @@ fn draw_table(frame: &mut Frame, app: &App, area: Rect, tc: &ThemeColors) {
         Constraint::Min(20),    // model name
         Constraint::Length(12), // provider
         Constraint::Length(8),  // params
+        Constraint::Length(12), // required memory
         Constraint::Length(6),  // score
         Constraint::Length(6),  // tok/s
         Constraint::Length(10), // quant (AWQ-4bit, GPTQ-Int4, GPTQ-Int8)
@@ -1034,6 +1035,8 @@ fn draw_table(frame: &mut Frame, app: &App, area: Rect, tc: &ThemeColors) {
                 ))
                 .style(Style::default().fg(tc.muted)),
                 Cell::from(fit.model.parameter_count.clone()).style(Style::default().fg(tc.fg)),
+                Cell::from(format!("{:.1}G", fit.memory_required_gb))
+                    .style(Style::default().fg(tc.muted)),
                 Cell::from(format!("{:.0}", fit.score)).style(Style::default().fg(score_color)),
                 Cell::from(tps_text).style(Style::default().fg(tc.fg)),
                 Cell::from(fit.best_quant.clone()).style(Style::default().fg(tc.muted)),
@@ -1074,6 +1077,7 @@ fn draw_table(frame: &mut Frame, app: &App, area: Rect, tc: &ThemeColors) {
         Constraint::Min(20),                           // model name
         Constraint::Length(PROVIDER_COL_WIDTH as u16), // provider
         Constraint::Length(8),                         // params
+        Constraint::Length(12),                        // required memory
         Constraint::Length(8),                         // score
         Constraint::Length(8),                         // tok/s
         Constraint::Length(10),                        // quant (AWQ-4bit, GPTQ-Int4, GPTQ-Int8)
@@ -3126,8 +3130,8 @@ fn status_keys_and_mode(app: &App) -> (String, String) {
         }
         InputMode::Select => {
             let header_names = [
-                "", "Inst", "Model", "Provider", "Params", "Score", "tok/s*", "Quant", "Mode",
-                "Mem %", "Ctx", "Date", "Fit", "Use Case",
+                "", "Inst", "Model", "Provider", "Params", "Req. memory", "Score", "tok/s*",
+                "Quant", "Mode", "Mem %", "Ctx", "Date", "Fit", "Use Case",
             ];
             let col_name = header_names.get(app.select_column).unwrap_or(&"");
             (

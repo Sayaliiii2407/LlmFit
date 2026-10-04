@@ -42,6 +42,7 @@ export default function ModelTable() {
             <th>{t('table.columns.model')}</th>
             <th>{t('table.columns.provider')}</th>
             <th>{t('table.columns.params')}</th>
+            <th>{t('table.columns.requiredMemory')}</th>
             <th>{t('table.columns.fit')}</th>
             <th>{t('table.columns.mode')}</th>
             <th>{t('table.columns.runtime')}</th>
@@ -55,7 +56,7 @@ export default function ModelTable() {
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan="12" className="table-status">
+              <td colSpan="13" className="table-status">
                 {t('table.loading')}
               </td>
             </tr>
@@ -63,7 +64,7 @@ export default function ModelTable() {
 
           {!loading && models.length === 0 && !error ? (
             <tr>
-              <td colSpan="12" className="table-status">
+              <td colSpan="13" className="table-status">
                 {t('table.empty')}
               </td>
             </tr>
@@ -118,6 +119,11 @@ export default function ModelTable() {
                     </td>
                     <td>{model.provider}</td>
                     <td>{round(model.params_b, 1)}B</td>
+                    <td>
+                      {typeof model.memory_required_gb === 'number'
+                        ? `${round(model.memory_required_gb, 1)} GB`
+                        : '\u2014'}
+                    </td>
                     <td>
                       <span className={fitClass(model.fit_level)}>
                         {translateFitLevel(t, model.fit_level, model.fit_label)}
